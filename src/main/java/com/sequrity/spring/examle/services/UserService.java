@@ -1,5 +1,6 @@
 package com.sequrity.spring.examle.services;
 
+import com.sequrity.spring.examle.entities.Authority;
 import com.sequrity.spring.examle.entities.Role;
 import com.sequrity.spring.examle.entities.User;
 import com.sequrity.spring.examle.repositories.UserRepository;
@@ -30,10 +31,21 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapAuthorityToAuthorities(user.getAuthorities()));
     }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    private Collection<? extends GrantedAuthority> mapAuthorityToAuthorities(Collection<Authority> authorities) {
+        return authorities.stream().map(authority -> new SimpleGrantedAuthority(authority.getName())).collect(Collectors.toList());
     }
+
+//    @Override
+//    @Transactional
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", username)));
+//        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+//    }
+//
+//    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+//        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+//    }
 }
