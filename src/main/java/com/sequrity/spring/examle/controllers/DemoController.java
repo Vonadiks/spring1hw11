@@ -30,8 +30,23 @@ public class DemoController {
         return "authenticated";
     }
 
+    @GetMapping("/edit_page")
+    public String editPage() {
+        return "editor";
+    }
+
+    @GetMapping("/view_page")
+    public String viewPage() {
+        return "viewer";
+    }
+
+    @GetMapping("/clean_page")
+    public String cleanPage() {
+        return "cleaner";
+    }
+
     @GetMapping("/admin")
-    // @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public String adminPage() {
         return "admin";
     }

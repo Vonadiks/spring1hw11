@@ -20,14 +20,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //log.info("Dao Authentication Provider");
+        log.info("Dao Authentication Provider");
         http.authorizeRequests()
                 .antMatchers("/auth_page/**").authenticated()
                 .antMatchers("/user_info").authenticated()
-                .antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // ROLE_ADMIN, ROLE_SUPERADMIN
+                .antMatchers("/view_page").hasAnyAuthority("VIEWER")
+                .antMatchers("/edit_page").hasAnyAuthority("EDITOR")
+                .antMatchers("/clean_page").hasAnyAuthority("CLEANER")
+                //.antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // ROLE_ADMIN, ROLE_SUPERADMIN
+                .antMatchers("/admin/**").hasAnyAuthority("EDITOR")
                 .anyRequest().permitAll()
                 .and()
-                .httpBasic()
+                .formLogin()
                 .and()
                 .sessionManagement()
                 .maximumSessions(1)
